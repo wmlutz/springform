@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default Input = ({seed, value, handleItemUpdate}) => {
+const Input = ({seed, value, handleItemUpdate}) => {
   const {name, label} = seed
   return (
     <input
@@ -12,3 +12,5 @@ export default Input = ({seed, value, handleItemUpdate}) => {
 
   )
 }
+
+export default Input

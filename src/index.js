@@ -5,13 +5,13 @@ import PropTypes from 'prop-types';
 
 const SpringForm = ({formArr, onSubmit}) => {
   if (formArr.length < 1) { return <div>Oops, no form input array.</div>}
-  let inside = formArr.map((item, i) => componentFinder(item, i))
-
-  const [formState, setFormState] = useState(formArr.map(el => {
+  const initState = formArr.map(el => {
     return({
       [el.name]: initialStateFinder(el.type)
     })
-  }));
+  })
+
+  const [formState, setFormState] = useState(initState);
 
   const handleItemUpdate = (name, data) => {
     setFormState([...formState, {[name]: data}])
@@ -24,6 +24,8 @@ const SpringForm = ({formArr, onSubmit}) => {
     } 
   }
 
+  let inside = formArr.map((item, i) => componentFinder(item, i))
+
   return (
     <>
       <p>Input is {input}</p>
@@ -33,7 +35,7 @@ const SpringForm = ({formArr, onSubmit}) => {
 }
 
 const initialStateFinder = (type) => {
-  switch (item.type) {
+  switch (type) {
     case 'input': return "";
     default: return null;
   } 
