@@ -1,0 +1,28 @@
+{
+  "name": "springform",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "scripts": {
+    "prepublishOnly": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline",
+    "build": "rm -rf ./dist && babel ./src --out-dir ./dist -s inline"
+  },
+  "peerDependencies": {
+    "react": "^16.9.0"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "react": "^16.9.0"
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.3.2",
+    "prop-types": "^15.7.2",
+    "typeface-roboto": "^0.0.75"
+  }
+}
