@@ -22,3 +22,4 @@ let formArr = [
 
 storiesOf('SpringForm', module)
     .add('just inputs', () => <SpringForm formArr={formArr}/>)
+    .add('no array', () => <SpringForm formArr={[]}/>)

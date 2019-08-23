@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Input = ({seed, value, handleItemUpdate}) => {
+const Input = ({seed, value, handleChange}) => {
   const {name, label} = seed
   return (
     <>
@@ -8,7 +8,7 @@ const Input = ({seed, value, handleItemUpdate}) => {
       <input
         name={name}
         value={value}
-        onChange={event => console.log('event', event)}
+        onChange={event => handleChange(name, event.target.value)}
       />
     </>
   )
