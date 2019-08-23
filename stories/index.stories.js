@@ -12,7 +12,8 @@ let formArr = [
   },{
     type: 'input',
     name: 'name',
-    label: 'name',
+    label: 'Name',
+    helperText: 'put your name here'
   },{
     type: 'number',
     name: 'other',

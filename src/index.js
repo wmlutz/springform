@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Input from './Input';
 import PropTypes from 'prop-types';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import RowWrapper from './RowWrapper';
+import { transformArrayInit } from './services/transformArrayInit';
 
 function SpringForm({formArr}){
   // XXX Update when new types added
@@ -27,23 +31,15 @@ function SpringForm({formArr}){
     } 
   }
 
-  let filterForComponent = formArr.map((item, i) => componentFinder(item, i))
+  let compArray = formArr.map((item, i) => <RowWrapper>{componentFinder(item, i)}</RowWrapper>)
 
-  return filterForComponent
-}
-
-const transformArrayInit = (arr) =>
-  arr.map(x => (
-      {[x.name]: getBlank(x.type)}
-    )
+  return (
+    <Container maxWidth="md">
+      <Grid container spacing={3}>
+        {compArray}
+      </Grid>
+    </Container>
   )
-
-// XXX Update when new types added
-const getBlank = (type) => {
-  switch (type) {
-    case 'input': return "";
-    default: return null;
-  } 
 }
 
 SpringForm.propTypes ={
@@ -61,20 +57,3 @@ SpringForm.defaultProps = {
 };
 
 export default SpringForm
-
-
-// let formArr = [
-//   {
-//     type: 'input',
-//     name: 'email',
-//     label: 'Email',
-//   },{
-//     type: 'input',
-//     name: 'name',
-//     label: 'name',
-//   },{
-//     type: 'number',
-//     name: 'other',
-//     label: 'other',
-//   }
-// ]
