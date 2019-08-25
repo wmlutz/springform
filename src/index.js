@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import Input from './Input';
 import PropTypes from 'prop-types';
-import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
-import RowWrapper from './RowWrapper';
-import { transformArrayInit } from './services/transformArrayInit';
+import Row from './components/Row';
+import { initArrayShape, componentFinder, filterForType } from './services/formtypeservices'
+import Container from './components/Container';
+import Themer from './services/Themer'
+import './style.css'
 
 function SpringForm({formArr}){
-  // XXX Update when new types added
-  let filterArr = formArr.filter(x => ['input'].includes(x.type))
-  let initArr = transformArrayInit(filterArr)
+  let filterArr = filterForType(formArr)
+  let initArr = initArrayShape(filterArr)
 
   const [formState, setFormState] = useState(initArr)
-  
+  const [viewState, setViewState] = useState(0)
+
   const handleChange = (name, value) => {
     let newArr = formState.map(item => {
       if (Object.keys(item)[0] !== name) {
@@ -23,22 +23,24 @@ function SpringForm({formArr}){
     setFormState(newArr)
   }
 
-  // XXX Update when new types added
-  const componentFinder = (item, i) => {
-    switch (item.type) {
-      case 'input': return <Input key={i} seed={item} handleChange={handleChange}/>;
-      default: return null;
-    } 
+  const prevView = () => {
+    if (viewState === 0) return
+    setViewState(viewState - 1)
   }
 
-  let compArray = formArr.map((item, i) => <RowWrapper>{componentFinder(item, i)}</RowWrapper>)
+  const nextView = () => {
+    if (viewState === filterArr.length) return
+    setViewState(viewState + 1)
+  }
+
+  let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange)}</Row>)
 
   return (
-    <Container maxWidth="md">
-      <Grid container spacing={3}>
+    <Themer>
+      <Container prevView={prevView} nextView={nextView}>
         {compArray}
-      </Grid>
-    </Container>
+      </Container>
+    </Themer>
   )
 }
 

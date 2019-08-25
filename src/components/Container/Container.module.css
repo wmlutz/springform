@@ -1,0 +1,18 @@
+  /* color for footer */
+.container { 
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background: rgb(208, 205, 224);
+}
+
+/* Main Body */
+.main {
+  flex: 1;
+  overflow: scroll;
+  background: #f0f0f0;
+  display: relative;
+}
