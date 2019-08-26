@@ -6,12 +6,14 @@ import Container from './components/Container';
 import Themer from './services/Themer'
 import './style.css'
 
-function SpringForm({formArr}){
+const SpringForm = ({formArr}) => {
   let filterArr = filterForType(formArr)
   let initArr = initArrayShape(filterArr)
 
   const [formState, setFormState] = useState(initArr)
   const [viewState, setViewState] = useState(0)
+
+  const dispatch = ((data) => console.log('dispatch called', data))
 
   const handleChange = (name, value) => {
     let newArr = formState.map(item => {
@@ -21,6 +23,11 @@ function SpringForm({formArr}){
       return {[name]: value}
     })
     setFormState(newArr)
+  }
+
+  const handleLocChange = (obj) => {
+    console.log('obj', obj)
+    dispatch(obj)
   }
 
   const prevView = () => {
@@ -33,7 +40,9 @@ function SpringForm({formArr}){
     setViewState(viewState + 1)
   }
 
-  let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange)}</Row>)
+  // const scrollToOffset = (num) => window.scrollTo(0, num)
+
+  let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange, i, handleLocChange)}</Row>)
 
   return (
     <Themer>

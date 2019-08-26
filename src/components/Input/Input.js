@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -15,11 +16,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Input = ({seed, value, handleChange}) => {
+const Input = ({seed, value, handleChange, index, dispatch}) => {
   const {name, label, helperText} = seed
   const classes = useStyles();
+  const inputRef = useRef(null)
+
+  useEffect(
+    () => {
+      let {offsetTop, clientHeight} = inputRef.current
+      dispatch({type: 'update', payload: {index, offsetTop, clientHeight}})
+    }, []
+  )
+
   return (
-    <div className={classes.row}>
+    <div className={classes.row} ref={inputRef}>
       <Typography gutterBottom className={classes.question}>{label}</Typography>
       <TextField
         id={label}
@@ -29,6 +39,20 @@ const Input = ({seed, value, handleChange}) => {
         margin="normal"
         helperText={helperText}
       />
+      <span style={{textAlign: "right"}}>
+        <Button 
+          color="primary" 
+          onClick={() => prevView()}
+          size="small">
+          Previous
+        </Button>
+        <Button 
+          color="primary" 
+          onClick={() => nextView()}
+          size="small">
+          Next
+        </Button>
+      </span>
     </div>
   )
 }

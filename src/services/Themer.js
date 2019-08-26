@@ -41,6 +41,16 @@ const Themer = ({children, primary, secondary, error}) => {
           },
         }
       },
+      MuiFormHelperText: {
+        root: {
+          color: primary
+        }
+      },
+      MuiButton: {
+        root: {
+          fontWeight: 300
+        }
+      }
     }
   });
 
