@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Row from './components/Row';
 import { initArrayShape, componentFinder, filterForType } from './services/formtypeservices'
@@ -6,14 +6,25 @@ import Container from './components/Container';
 import Themer from './services/Themer'
 import './style.css'
 
+function reducer(state, action) {
+  switch (action.type) {
+    case 'update':
+      return [
+        ...state,
+        action.payload
+      ];
+    default:
+      throw new Error();
+  }
+}
+
 const SpringForm = ({formArr}) => {
   let filterArr = filterForType(formArr)
   let initArr = initArrayShape(filterArr)
 
   const [formState, setFormState] = useState(initArr)
   const [viewState, setViewState] = useState(0)
-
-  const dispatch = ((data) => console.log('dispatch called', data))
+  const [state, dispatch] = useReducer(reducer, []);
 
   const handleChange = (name, value) => {
     let newArr = formState.map(item => {
@@ -25,28 +36,37 @@ const SpringForm = ({formArr}) => {
     setFormState(newArr)
   }
 
-  const handleLocChange = (obj) => {
-    console.log('obj', obj)
-    dispatch(obj)
-  }
+  const handleLocChange = (obj) => dispatch(obj)
 
   const prevView = () => {
     if (viewState === 0) return
+    scrollToOffset(viewState - 1)
     setViewState(viewState - 1)
   }
 
   const nextView = () => {
     if (viewState === filterArr.length) return
+    scrollToOffset(viewState + 2)
     setViewState(viewState + 1)
   }
 
-  // const scrollToOffset = (num) => window.scrollTo(0, num)
+  const containerRef = useRef(null);
+
+  const scrollToOffset = (num) => {
+    let offset = state[num].offsetTop
+    console.log('offset', offset)
+    console.log('first', containerRef.current.scrollTop)
+    containerRef.current.scrollTop = offset
+    console.log('second', containerRef.current.scrollTop)
+  }
 
   let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange, i, handleLocChange)}</Row>)
 
+  // console.log('containerRef', containerRef)
+
   return (
     <Themer>
-      <Container prevView={prevView} nextView={nextView}>
+      <Container prevView={prevView} nextView={nextView} containerRef={containerRef} >
         {compArray}
       </Container>
     </Themer>
