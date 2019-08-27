@@ -15,4 +15,5 @@
   overflow: scroll;
   background: #f0f0f0;
   display: relative;
+  scroll-behavior: smooth;
 }

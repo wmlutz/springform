@@ -50,23 +50,27 @@ const SpringForm = ({formArr}) => {
     setViewState(viewState + 1)
   }
 
+  const setSpecificView = (num) => {
+    scrollToOffset(num)
+    setViewState(num)
+  }
+
   const containerRef = useRef(null);
 
   const scrollToOffset = (num) => {
     let offset = state[num].offsetTop
-    console.log('offset', offset)
-    console.log('first', containerRef.current.scrollTop)
+    
+    // const props = useSpring({ scroll: offset, from: { scroll: 0 } })
     containerRef.current.scrollTop = offset
-    console.log('second', containerRef.current.scrollTop)
   }
+
+
 
   let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange, i, handleLocChange)}</Row>)
 
-  // console.log('containerRef', containerRef)
-
   return (
     <Themer>
-      <Container prevView={prevView} nextView={nextView} containerRef={containerRef} >
+      <Container prevView={prevView} nextView={nextView} containerRef={containerRef} setSpecificView={setSpecificView} >
         {compArray}
       </Container>
     </Themer>

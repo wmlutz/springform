@@ -12,12 +12,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LogoBanner = ({nextView}) => {
+const LogoBanner = ({setSpecificView}) => {
   const classes = useStyles();
   
   return <div className={classes.container}>
     <span>Logo here</span>
-    <Button variant="contained" color="primary" onClick={() => nextView()}>
+    <Button variant="contained" color="primary" onClick={() => setSpecificView(0)}>
       Get Started
     </Button>
   </div>
