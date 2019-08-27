@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useRef } from 'react';
+import React, { useState, useReducer, useRef, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import Row from './components/Row';
 import { initArrayShape, componentFinder, filterForType } from './services/formtypeservices'
@@ -24,6 +24,8 @@ const SpringForm = ({formArr}) => {
 
   const [formState, setFormState] = useState(initArr)
   const [viewState, setViewState] = useState(0)
+  const [screenState, setScreenState] = useState(0)
+  const [scrollY, setScrollY] = useState(0);
   const [state, dispatch] = useReducer(reducer, []);
 
   const handleChange = (name, value) => {
@@ -40,14 +42,12 @@ const SpringForm = ({formArr}) => {
 
   const prevView = () => {
     if (viewState === 0) return
-    scrollToOffset(viewState - 1)
-    setViewState(viewState - 1)
+    setSpecificView(viewState - 1)
   }
 
   const nextView = () => {
     if (viewState === filterArr.length) return
-    scrollToOffset(viewState + 2)
-    setViewState(viewState + 1)
+    setSpecificView(viewState + 1)
   }
 
   const setSpecificView = (num) => {
@@ -58,15 +58,28 @@ const SpringForm = ({formArr}) => {
   const containerRef = useRef(null);
 
   const scrollToOffset = (num) => {
-    let offset = state[num].offsetTop
-    
-    // const props = useSpring({ scroll: offset, from: { scroll: 0 } })
+    let offset = state[num].offsetTop - (screenState/2) + (state[num].clientHeight/2)
     containerRef.current.scrollTop = offset
   }
-
-
-
+  
   let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange, i, handleLocChange)}</Row>)
+
+  useEffect(() => {setScreenState(containerRef.current.clientHeight)}, [])
+
+  function logit() {
+    // console.log(containerRef)
+    setScrollY(containerRef.current.scrollTop);
+  }
+
+  useLayoutEffect(() => {
+    function watchScroll() {
+      containerRef.current.addEventListener("scroll", logit);
+    }
+    watchScroll();
+    return () => {
+      containerRef.current.removeEventListener("scroll", logit);
+    };
+  });
 
   return (
     <Themer>
