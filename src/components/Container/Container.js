@@ -4,11 +4,11 @@ import Container from '@material-ui/core/Container';
 import Footer from '../Footer';
 import LogoBanner from '../LogoBanner'
 
-export default ({children, prevView, nextView, containerRef, setSpecificView}) => (
+export default ({children, prevView, nextView, containerRef, setSpecificView, dispatch}) => (
   <div className={styles.container} >
     <main className={styles.main} ref={containerRef}>
       <Container maxWidth='md'>
-        <LogoBanner setSpecificView={setSpecificView} />
+        <LogoBanner setSpecificView={setSpecificView} dispatch={dispatch} />
         {children}
         <div style={{height: "50vh"}}/>
       </Container>

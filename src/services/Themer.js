@@ -1,9 +1,13 @@
 import React from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
+import blue from '@material-ui/core/colors/blue';
+import colorfinder from './colorfinder';
 
-const Themer = ({children, primary, secondary, error}) => {
-  const theme = createMuiTheme({
+const Themer =  ({children, baseColor}) => {
+  let color = colorfinder(baseColor);
+
+  let theme = createMuiTheme({
     typography: {
       fontSize: 18,
       fontFamily: [
@@ -16,34 +20,31 @@ const Themer = ({children, primary, secondary, error}) => {
         'sans-serif',
       ].join(','),
       body1: {
-        color: primary
+        color: color[900]
       }
     },
     palette: {
       primary: {
-        main: primary,
+        main: color[900]
       },
       secondary: {
-        main: secondary,
-      },
-      error: {
-        main: error
+        main: blue[800],
       }
     },
     overrides: {
       MuiTextField: {
         root: {
           '& .MuiInput-underline:before': {
-            borderBottom: `2px solid ${primary}`,
+            borderBottom: `2px solid ${color[900]}`,
           },
           '& .MuiInput-underline:during': {
-            borderBottom: `2px solid ${primary}`,
+            borderBottom: `2px solid ${color[900]}`,
           },
         }
       },
       MuiFormHelperText: {
         root: {
-          color: primary
+          color: color[900],
         }
       },
       MuiButton: {
@@ -54,15 +55,14 @@ const Themer = ({children, primary, secondary, error}) => {
     }
   });
 
+
   return <ThemeProvider theme={theme}>
     {children}
   </ThemeProvider>
 }
 
 Themer.defaultProps = {
-  primary: '#ab0b00',
-  secondary: '#0c007d',
-  error: '#ff1500'
+  baseColor: 'red',
 };
 
 export default Themer

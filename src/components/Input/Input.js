@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import red from '@material-ui/core/colors/red';
 
 const useStyles = makeStyles(theme => ({
   row: {
@@ -13,10 +14,14 @@ const useStyles = makeStyles(theme => ({
   },
   question: {
     fontWeight: 300
+  },
+  disabled: {
+    fontWeight: 300,
+    color: red[100]
   }
 }));
 
-const Input = ({seed, value, handleChange, index, dispatch}) => {
+const Input = ({seed, value, handleChange, index, dispatch, viewState}) => {
   const {name, label, helperText} = seed
   const classes = useStyles();
   const inputRef = useRef(null)
@@ -24,14 +29,17 @@ const Input = ({seed, value, handleChange, index, dispatch}) => {
   useEffect(
     () => {
       let {offsetTop, clientHeight} = inputRef.current
-      dispatch({type: 'update', payload: {index, offsetTop, clientHeight}})
+      dispatch({type: 'update', payload: {index: index + 1, offsetTop, clientHeight}})
     }, []
   )
 
+  let active = (viewState === index + 1)
+
   return (
     <div className={classes.row} ref={inputRef}>
-      <Typography gutterBottom className={classes.question}>{label}</Typography>
+      <Typography gutterBottom className={active ? classes.question : classes.disabled}>{label}</Typography>
       <TextField
+        disabled={viewState !== index + 1}
         id={label}
         fullWidth
         value={value}

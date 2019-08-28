@@ -11,9 +11,9 @@ const getBlank = (type) => {
   }
 };
 
- export const componentFinder = (item, handleChange, i, handleLocChange) => {
+ export const componentFinder = (item, handleChange, i, dispatch, viewState) => {
   switch (item.type) {
-    case 'input': return <Input index={i} seed={item} handleChange={handleChange} dispatch={handleLocChange}/>;
+    case 'input': return <Input index={i} seed={item} handleChange={handleChange} dispatch={dispatch} viewState={viewState}/>;
     default: return null;
   } 
 }
@@ -24,3 +24,15 @@ export const filterForType = (arr) => {
 
 export const initLocShape = (arr) => 
   arr.map((x, i) => ({index: i, offsetTop: 0, clientHeight: 0}));
+
+export const reducer = (state, action) => {
+  switch (action.type) {
+    case 'update':
+      return [
+        ...state,
+        action.payload
+      ];
+    default:
+      throw new Error();
+  }
+}

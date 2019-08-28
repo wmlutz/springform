@@ -1,31 +1,18 @@
 import React, { useState, useReducer, useRef, useEffect, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import Row from './components/Row';
-import { initArrayShape, componentFinder, filterForType } from './services/formtypeservices'
+import { initArrayShape, componentFinder, filterForType, reducer } from './services/formtypeservices'
 import Container from './components/Container';
 import Themer from './services/Themer'
 import './style.css'
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'update':
-      return [
-        ...state,
-        action.payload
-      ];
-    default:
-      throw new Error();
-  }
-}
-
-const SpringForm = ({formArr}) => {
+const SpringForm = ({formArr, baseColor}) => {
   let filterArr = filterForType(formArr)
   let initArr = initArrayShape(filterArr)
 
   const [formState, setFormState] = useState(initArr)
   const [viewState, setViewState] = useState(0)
-  const [screenState, setScreenState] = useState(0)
-  const [scrollY, setScrollY] = useState(0);
+  const [screenHeight, setScreenHeight] = useState(0)
   const [state, dispatch] = useReducer(reducer, []);
 
   const handleChange = (name, value) => {
@@ -37,8 +24,6 @@ const SpringForm = ({formArr}) => {
     })
     setFormState(newArr)
   }
-
-  const handleLocChange = (obj) => dispatch(obj)
 
   const prevView = () => {
     if (viewState === 0) return
@@ -58,17 +43,22 @@ const SpringForm = ({formArr}) => {
   const containerRef = useRef(null);
 
   const scrollToOffset = (num) => {
-    let offset = state[num].offsetTop - (screenState/2) + (state[num].clientHeight/2)
+    let offset = state[num].offsetTop - (screenHeight/2) + (state[num].clientHeight/2)
     containerRef.current.scrollTop = offset
   }
   
-  let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange, i, handleLocChange)}</Row>)
+  let compArray = formArr.map((item, i) => <Row key={i}>{componentFinder(item, handleChange, i, dispatch, viewState)}</Row>)
 
-  useEffect(() => {setScreenState(containerRef.current.clientHeight)}, [])
+  useEffect(() => {setScreenHeight(containerRef.current.clientHeight)}, [])
 
-  function logit() {
-    // console.log(containerRef)
-    setScrollY(containerRef.current.scrollTop);
+  const logit =() => {
+    const {scrollTop} = containerRef.current;
+    let el = state.find(x =>  {
+      let top = (x.offsetTop > scrollTop)
+      let bottom = ((x.offsetTop + x.clientHeight) < (scrollTop + screenHeight))
+      return (top && bottom)
+    })
+    !!el ? setViewState(el.index) : setViewState(0)
   }
 
   useLayoutEffect(() => {
@@ -82,26 +72,31 @@ const SpringForm = ({formArr}) => {
   });
 
   return (
-    <Themer>
-      <Container prevView={prevView} nextView={nextView} containerRef={containerRef} setSpecificView={setSpecificView} >
+    <Themer baseColor={baseColor}>
+      <Container prevView={prevView} nextView={nextView} containerRef={containerRef} setSpecificView={setSpecificView} dispatch={dispatch} >
         {compArray}
       </Container>
     </Themer>
   )
 }
 
-SpringForm.propTypes ={
+SpringForm.propTypes = {
   formArr: PropTypes.arrayOf(PropTypes.shape({
     type: PropTypes.string,
     name: PropTypes.string,
     label: PropTypes.string,
   })).isRequired,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  baseColor: PropTypes.oneOf([
+    'red', 'pink', 'purple', 'deepPurple', 'indigo', 'blue', 'lightBlue', 'cyan', 'teal', 'green', 
+    'lightGreen', 'lime', 'yellow', 'amber', 'orange', 'deepOrange', 'brown', 'grey', 'blueGrey'
+  ]),
 }
 
 SpringForm.defaultProps = {
   formArr: [],
-  onSubmit: () => console.log('submit')
+  onSubmit: () => console.log('submit'),
+  baseColor: 'red'
 };
 
 export default SpringForm

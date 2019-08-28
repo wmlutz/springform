@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
@@ -12,12 +12,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LogoBanner = ({setSpecificView}) => {
+const LogoBanner = ({setSpecificView, dispatch}) => {
   const classes = useStyles();
+  const logoRef = useRef(null)
   
-  return <div className={classes.container}>
+  useEffect(
+    () => {
+      let {offsetTop, clientHeight} = logoRef.current
+      dispatch({type: 'update', payload: {index: 0, offsetTop, clientHeight}})
+    }, []
+  )
+
+  return <div className={classes.container} ref={logoRef}>
     <span>Logo here</span>
-    <Button variant="contained" color="primary" onClick={() => setSpecificView(0)}>
+    <Button variant="contained" color="primary" onClick={() => setSpecificView(1)}>
       Get Started
     </Button>
   </div>

@@ -40,5 +40,6 @@ let formArr = [
 ]
 
 storiesOf('SpringForm', module)
-    .add('just inputs', () => <SpringForm formArr={formArr}/>)
-    .add('no array', () => <SpringForm formArr={[]}/>)
+    .add('red', () => <SpringForm formArr={formArr} baseColor='red'/>)
+    .add('green', () => <SpringForm formArr={formArr} baseColor='green'/>)
+    .add('blue', () => <SpringForm formArr={formArr} baseColor='blue'/>)
