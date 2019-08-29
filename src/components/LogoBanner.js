@@ -12,20 +12,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LogoBanner = ({setSpecificView, dispatch}) => {
+const LogoBanner = ({setView, locDispatch}) => {
   const classes = useStyles();
   const logoRef = useRef(null)
   
   useEffect(
     () => {
       let {offsetTop, clientHeight} = logoRef.current
-      dispatch({type: 'update', payload: {index: 0, offsetTop, clientHeight}})
+      locDispatch({type: 'update', payload: {index: 0, offsetTop, clientHeight}})
     }, []
   )
 
   return <div className={classes.container} ref={logoRef}>
     <span>Logo here</span>
-    <Button variant="contained" color="primary" onClick={() => setSpecificView(1)}>
+    <Button variant="contained" color="primary" onClick={() => setView(1)}>
       Get Started
     </Button>
   </div>

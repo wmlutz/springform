@@ -1,12 +1,8 @@
 import React from 'react';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import blue from '@material-ui/core/colors/blue';
-import colorfinder from './colorfinder';
 
-const Themer =  ({children, baseColor}) => {
-  let color = colorfinder(baseColor);
-
+const Themer =  ({children, color}) => {
   let theme = createMuiTheme({
     typography: {
       fontSize: 18,
@@ -21,14 +17,15 @@ const Themer =  ({children, baseColor}) => {
       ].join(','),
       body1: {
         color: color[900]
+      },
+      h6: {
+        fontSize: 16,
+        fontWeight: 300
       }
     },
     palette: {
       primary: {
         main: color[900]
-      },
-      secondary: {
-        main: blue[800],
       }
     },
     overrides: {

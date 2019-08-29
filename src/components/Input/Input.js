@@ -1,29 +1,11 @@
 import React, { useRef, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import red from '@material-ui/core/colors/red';
+import NextBar from '../NextBar';
 
-const useStyles = makeStyles(theme => ({
-  row: {
-    marginTop: theme.spacing(7),
-    marginBottom: theme.spacing(7),
-    paddingTop: theme.spacing(7),
-    paddingBottom: theme.spacing(7),
-  },
-  question: {
-    fontWeight: 300
-  },
-  disabled: {
-    fontWeight: 300,
-    color: red[100]
-  }
-}));
-
-const Input = ({seed, value, handleChange, index, dispatch, viewState}) => {
+const Input = ({seed, value, handleChange, index, dispatch, viewState, setView}) => {
   const {name, label, helperText} = seed
-  const classes = useStyles();
   const inputRef = useRef(null)
 
   useEffect(
@@ -33,11 +15,33 @@ const Input = ({seed, value, handleChange, index, dispatch, viewState}) => {
     }, []
   )
 
+  const useStyles = makeStyles(theme => ({
+    row: {
+      marginTop: theme.spacing(7),
+      marginBottom: theme.spacing(7),
+      paddingTop: theme.spacing(7),
+      paddingBottom: theme.spacing(7),
+      opacity: 1,
+    },
+    disabledRow: {
+      marginTop: theme.spacing(7),
+      marginBottom: theme.spacing(7),
+      paddingTop: theme.spacing(7),
+      paddingBottom: theme.spacing(7),
+      opacity: 0.2,
+    },
+    question: {
+      fontWeight: 300
+    },
+  }));
+
+  const classes = useStyles();
+
   let active = (viewState === index + 1)
 
   return (
-    <div className={classes.row} ref={inputRef}>
-      <Typography gutterBottom className={active ? classes.question : classes.disabled}>{label}</Typography>
+    <div className={active ? classes.row : classes.disabledRow} ref={inputRef}>
+      <Typography gutterBottom className={classes.question}>{label}</Typography>
       <TextField
         disabled={viewState !== index + 1}
         id={label}
@@ -47,20 +51,7 @@ const Input = ({seed, value, handleChange, index, dispatch, viewState}) => {
         margin="normal"
         helperText={helperText}
       />
-      <span style={{textAlign: "right"}}>
-        <Button 
-          color="primary" 
-          onClick={() => prevView()}
-          size="small">
-          Previous
-        </Button>
-        <Button 
-          color="primary" 
-          onClick={() => nextView()}
-          size="small">
-          Next
-        </Button>
-      </span>
+      <NextBar setView={setView} index={index + 1}/>
     </div>
   )
 }

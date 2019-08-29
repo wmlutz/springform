@@ -11,9 +11,9 @@ const getBlank = (type) => {
   }
 };
 
- export const componentFinder = (item, handleChange, i, dispatch, viewState) => {
+ export const componentFinder = (item, handleChange, i, dispatch, viewState, setView) => {
   switch (item.type) {
-    case 'input': return <Input index={i} seed={item} handleChange={handleChange} dispatch={dispatch} viewState={viewState}/>;
+    case 'input': return <Input index={i} seed={item} handleChange={handleChange} dispatch={dispatch} viewState={viewState} setView={setView}/>;
     default: return null;
   } 
 }

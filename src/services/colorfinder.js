@@ -18,44 +18,26 @@ import grey from '@material-ui/core/colors/grey';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 
 export default (base) => {
-  switch (base) {
-    case 'red':
-      return red
-    case 'pink':
-      return pink
-    case 'purple':
-      return purple
-    case 'deepPurple':
-      return deepPurple
-    case 'indigo':
-      return indigo
-    case 'blue':
-      return blue
-    case 'lightBlue':
-      return lightBlue
-    case 'cyan':
-      return cyan
-    case 'green':
-      return green
-    case 'lightGreen':
-      return lightGreen
-    case 'lime':
-      return lime
-    case 'yellow':
-      return yellow
-    case 'amber':
-      return amber
-    case 'orange':
-      return orange
-    case 'deepOrange':
-      return deepOrange
-    case 'brown':
-      return brown
-    case 'grey':
-      return grey
-    case 'blueGrey':
-      return blueGrey
-    default:
-      return red;
+  let obj = {
+    red: red,
+    pink: pink,
+    purple: purple,
+    deepPurple: deepPurple,
+    indigo: indigo,
+    blue: blue,
+    lightBlue: lightBlue,
+    cyan: cyan,
+    green: green,
+    lightGreen: lightGreen,
+    lime: lime,
+    yellow: yellow,
+    amber: amber,
+    orange: orange,
+    deepOrange: deepOrange,
+    brown: brown,
+    grey: grey,
+    blueGrey: blueGrey,
   }
+
+  return obj[base] ? obj[base] : obj.red
 }

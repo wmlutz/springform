@@ -4,15 +4,15 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
-export default ({ prevView, nextView }) => {
+export default ({ setView, viewState }) => {
   return (<div>
     <ButtonGroup size="small" aria-label="small outlined button group">
-      <Button variant="contained" color="primary" onClick={() => prevView()}>
-      <ArrowBackIosIcon />
-    </Button>
-    <Button variant="contained" color="primary" onClick={() => nextView()}>
-      <ArrowForwardIosIcon />
-    </Button>
+      <Button variant="contained" color="primary" onClick={() => setView(viewState - 1)}>
+        <ArrowBackIosIcon />
+      </Button>
+      <Button variant="contained" color="primary" onClick={() => setView(viewState + 1)}>
+        <ArrowForwardIosIcon />
+      </Button>
     </ButtonGroup>
   </div>);
 }
