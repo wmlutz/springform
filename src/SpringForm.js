@@ -9,7 +9,7 @@ import SubmitPopover from './components/SubmitPopover';
 import {reducer, initState} from './services/reducer'
 import './style.css'
 
-export const SpringForm = ({formArr, baseColor, onSubmit}) => {
+export const SpringForm = ({formArr, baseColor, onSubmit, logo}) => {
   let filterArr = filterForType(formArr)
   let initArr = initArrayShape(filterArr)
   const [state, dispatch] = useReducer(reducer, {...initState, formVals: initArr});
@@ -43,8 +43,8 @@ export const SpringForm = ({formArr, baseColor, onSubmit}) => {
     containerRef.current.scrollTop = offset
   }
   
-  let compArray = filterArr.map((item, i) =>{
-    let value = state.formVals.find(x => item.name === x.name);
+  let compArray = state.formVals.map((item, i) =>{
+    let {value} = item;
     return (<Row key={i}>
       {componentFinder(item, handleChange, i, dispatch, state.viewscreen, setView, value)}
     </Row>)
@@ -84,6 +84,7 @@ export const SpringForm = ({formArr, baseColor, onSubmit}) => {
           containerRef={containerRef} 
           setView={setView} 
           locDispatch={dispatch}
+          logo={logo}
         >
           {compArray}
           <SubmitPopover openDialog={state.dialogOpen} handleClose={() => dispatch({type: 'set_dialog', payload: false})} handleSubmit={handleSubmit}/>
@@ -103,10 +104,12 @@ SpringForm.propTypes = {
     'red', 'pink', 'purple', 'deepPurple', 'indigo', 'blue', 'lightBlue', 'cyan', 'teal', 'green', 
     'lightGreen', 'lime', 'yellow', 'amber', 'orange', 'deepOrange', 'brown', 'grey', 'blueGrey'
   ]),
+  logo: PropTypes.string,
 }
 
 SpringForm.defaultProps = {
   formArr: [],
   onSubmit: (data) => console.log('submit' , data),
-  baseColor: 'red'
+  baseColor: 'red',
+  logo: null
 };

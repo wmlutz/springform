@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Input = ({index, handleChange, dispatch, active, setView, item}) => {
-  const {name, label, helperText} = item
+  const {name, label, helperText, value} = item
   const inputRef = useRef(null)
 
   useEffect(
@@ -44,6 +44,7 @@ const Input = ({index, handleChange, dispatch, active, setView, item}) => {
         disabled={!active}
         id={label}
         fullWidth
+        value={value}
         onChange={event => handleChange(name, event.target.value)}
         margin="normal"
         helperText={helperText}
