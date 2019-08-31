@@ -1,8 +1,10 @@
 import React, { useRef, useEffect } from 'react';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import NextBar from '../NextBar';
+import FormHelperText from '@material-ui/core/FormHelperText';
 
 const useStyles = makeStyles(theme => ({
   row: {
@@ -24,12 +26,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Input = ({index, handleChange, dispatch, active, setView, item}) => {
-  const {name, label, helperText} = item
+const Input = ({index, handleChange, dispatch, setView, item, active}) => {
+  const {name, label, helperText, options, value} = item
   const inputRef = useRef(null)
 
-  useEffect(
-    () => {
+  useEffect( () => {
       let {offsetTop, clientHeight} = inputRef.current
       dispatch({type: 'update_loc', payload: {index: index + 1, offsetTop, clientHeight}})
     }, []
@@ -37,17 +38,28 @@ const Input = ({index, handleChange, dispatch, active, setView, item}) => {
 
   const classes = useStyles();
 
+  const handleCheckChange = (valItem) => {
+    let nextVal = value.includes(valItem) ? value.filter(y => y !== valItem) : [...value, valItem]
+    handleChange(name, nextVal)
+  }
+
   return (
     <div className={active ? classes.row : classes.disabledRow} ref={inputRef}>
       <Typography gutterBottom className={classes.question}>{label}</Typography>
-      <TextField
+      {options.map(x => <FormControlLabel
+        key={x.key}
         disabled={!active}
-        id={label}
-        fullWidth
-        onChange={event => handleChange(name, event.target.value)}
-        margin="normal"
-        helperText={helperText}
-      />
+        control={
+          <Checkbox
+            checked={value.includes(x.key)}
+            onChange={() => handleCheckChange(x.key)}
+            value={x.key}
+            color="primary"
+          />
+        }
+        label={x.text}
+      />)}
+      { !!helperText ? <FormHelperText>{helperText}</FormHelperText> : null }
       <NextBar setView={setView} index={index + 1}/>
     </div>
   )

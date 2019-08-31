@@ -7,35 +7,65 @@ import SpringForm from '../src';
 let formArr = [
   {
     type: 'input',
-    name: 'email',
-    label: 'Please put your email here:',
+    name: 'co_name',
+    label: 'Name of Organization',
+    helperText: 'Enter the full legal name of the enterprise. Include any abbreviations as well: Inc, Ltd, LLC, etc.',
   },{
     type: 'input',
-    name: 'fname',
-    label: 'What is your first name?',
-    helperText: 'put your name here'
-  },{
-    type: 'input',
-    name: 'lname',
-    label: 'Please type your last name:',
-    helperText: 'Put your last name here'
+    name: 'dba',
+    label: 'Doing Business As Name',
+    helperText: 'Does your organization operate under an assumed or trade name that is different from its legal name?'
   },{
     type: 'input',
     name: 'address',
-    label: 'What is your street address?',
-    helperText: 'You know, where your house is'
+    label: 'Street Address of Organization',
   },{
     type: 'input',
-    name: 'city',
-    label: 'What city do you work in?',
+    name: 'address',
+    label: 'Mailing Address of Organization',
+    helperText: 'If different from Street Address.'
   },{
     type: 'input',
-    name: 'state',
-    label: 'What state are you in?',
+    name: 'phone',
+    label: 'Business Phone',
   },{
-    type: 'number',
-    name: 'other',
-    label: 'other',
+    type: 'input',
+    name: 'ein',
+    label: 'Federal EIN for Your Organization',
+  },{
+    type: 'input',
+    name: 'ceo',
+    label: 'CEO for Your Organization',
+  },{
+    type: 'input',
+    name: 'president',
+    label: 'President for Your Organization',
+    helperText: 'If different from CEO',
+  },{
+    type: 'input',
+    name: 'owner',
+    label: 'Owner for Your Organization',
+    helperText: 'If different from CEO or President',
+  },{
+    type: 'select',
+    name: 'spec_interest',
+    label: 'This firm is certified as',
+    helperText: 'Select all that apply',
+    options: [
+      {
+        key: 'mob',
+        text: 'Minority Owned Business'
+      },{
+        key: 'vob',
+        text: 'Veteran Owned Business'
+      },{
+        key: 'dbe',
+        text: 'Disadvantaged Business Enterprise'
+      },{
+        key: 'wbe',
+        text: 'Women Owned Business'
+      },
+    ]
   }
 ]
 

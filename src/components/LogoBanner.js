@@ -19,7 +19,7 @@ const LogoBanner = ({setView, locDispatch}) => {
   useEffect(
     () => {
       let {offsetTop, clientHeight} = logoRef.current
-      locDispatch({type: 'update', payload: {index: 0, offsetTop, clientHeight}})
+      locDispatch({type: 'update_loc', payload: {index: 0, offsetTop, clientHeight}})
     }, []
   )
 

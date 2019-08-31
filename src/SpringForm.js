@@ -1,68 +1,69 @@
-import React, { useState, useReducer, useRef, useEffect, useLayoutEffect, useContext } from 'react';
+import React, { useRef, useEffect, useLayoutEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Row from './components/Row';
-import { initArrayShape, componentFinder, filterForType, reducer } from './services/formtypeservices'
+import { initArrayShape, componentFinder, filterForType } from './services/formtypeservices'
 import Container from './components/Container';
 import Themer from './services/Themer'
-import './style.css'
 import colorfinder from './services/colorfinder';
 import SubmitPopover from './components/SubmitPopover';
+import {reducer, initState} from './services/reducer'
+import './style.css'
 
-export const SpringForm = ({formArr, baseColor}) => {
+export const SpringForm = ({formArr, baseColor, onSubmit}) => {
   let filterArr = filterForType(formArr)
   let initArr = initArrayShape(filterArr)
+  const [state, dispatch] = useReducer(reducer, {...initState, formVals: initArr});
+  const containerRef = useRef(null);
 
-  const [formState, setFormState] = useState(initArr)
-  const [viewState, setViewState] = useState(0)
-  const [openDialog, setDialog] = useState(false)
-  const [screenHeight, setScreenHeight] = useState(0)
-  const [compLocArr, locDispatch] = useReducer(reducer, []);
+  useEffect(() => {
+    dispatch({
+      type: 'set_screen_height', payload: containerRef.current.clientHeight
+    })
+  }, [])
 
   const handleChange = (name, value) => {
-    let newArr = formState.map(item => {
-      if (Object.keys(item)[0] !== name) {
-        return item
-      }
-      return {[name]: value}
+    dispatch({
+      type: 'change_form_val', payload: {name, value}
     })
-    setFormState(newArr)
   }
 
   const setView = (num) => {
-    if (num < 0 || num >= filterArr.length) return
+    if (num < 0) return
+    if(num > filterArr.length) {
+      dispatch({type: 'set_dialog', payload: true})
+      return
+    }
     scrollToOffset(num)
-    setViewState(num)
+    dispatch({type: 'set_viewscreen', payload: num})
   }
 
-  const containerRef = useRef(null);
 
   const scrollToOffset = (num) => {
-    let offset = compLocArr[num].offsetTop - (screenHeight/2) + (compLocArr[num].clientHeight/2)
+    let offset = state.loc[num].offsetTop - (state.screenHeight/2) + (state.loc[num].clientHeight/2)
     containerRef.current.scrollTop = offset
   }
   
-  let compArray = formArr.map((item, i) => {
-    return <Row key={i}>
-      {componentFinder(item, handleChange, i, locDispatch, viewState, setView)}
-    </Row>
+  let compArray = filterArr.map((item, i) =>{
+    let value = state.formVals.find(x => item.name === x.name);
+    return (<Row key={i}>
+      {componentFinder(item, handleChange, i, dispatch, state.viewscreen, setView, value)}
+    </Row>)
   })
-
-  useEffect(() => {setScreenHeight(containerRef.current.clientHeight)}, [])
 
   const logit =() => {
     const {scrollTop} = containerRef.current;
-    let el = compLocArr.find(x =>  {
+    let el = state.loc.find(x =>  {
       let top = (x.offsetTop > scrollTop)
-      let bottom = ((x.offsetTop + x.clientHeight) < (scrollTop + screenHeight))
+      let bottom = ((x.offsetTop + x.clientHeight) < (scrollTop + state.screenHeight))
       return (top && bottom)
     })
-    !!el ? setViewState(el.index) : setViewState(0)
+    !!el ? dispatch({type: 'set_viewscreen', payload: el.index}) : null
+
   }
 
   useLayoutEffect(() => {
-    function watchScroll() {
-      containerRef.current.addEventListener("scroll", logit);
-    }
+    let watchScroll = () => containerRef.current.addEventListener("scroll", logit);
+    
     watchScroll();
     return () => {
       containerRef.current.removeEventListener("scroll", logit);
@@ -71,25 +72,29 @@ export const SpringForm = ({formArr, baseColor}) => {
 
   let color = colorfinder(baseColor)
 
+  const handleSubmit = () => {
+    dispatch({type: 'set_dialog', payload: false})
+    onSubmit(state.formVals)
+  }
+
   return (
-    <Themer color={color}>
-      <Container 
-        viewState={viewState}
-        containerRef={containerRef} 
-        setView={setView} 
-        locDispatch={locDispatch}
-      >
-        {compArray}
-        <button onClick={() => setDialog(true)}>Click</button>
-        <SubmitPopover openDialog={openDialog} handleClose={() => setDialog(false)}/>
-      </Container>
-    </Themer>
+      <Themer color={color}>
+        <Container 
+          viewState={state.viewscreen}
+          containerRef={containerRef} 
+          setView={setView} 
+          locDispatch={dispatch}
+        >
+          {compArray}
+          <SubmitPopover openDialog={state.dialogOpen} handleClose={() => dispatch({type: 'set_dialog', payload: false})} handleSubmit={handleSubmit}/>
+        </Container>
+      </Themer>
   )
 }
 
 SpringForm.propTypes = {
   formArr: PropTypes.arrayOf(PropTypes.shape({
-    type: PropTypes.oneOf(['input']),
+    type: PropTypes.oneOf(['input', 'select']),
     name: PropTypes.string,
     label: PropTypes.string,
   })).isRequired,
@@ -102,6 +107,6 @@ SpringForm.propTypes = {
 
 SpringForm.defaultProps = {
   formArr: [],
-  onSubmit: () => console.log('submit'),
+  onSubmit: (data) => console.log('submit' , data),
   baseColor: 'red'
 };
