@@ -9,7 +9,7 @@ import SubmitPopover from './components/SubmitPopover';
 import {reducer, initState} from './services/reducer'
 import './style.css'
 
-export const SpringForm = ({formArr, baseColor, onSubmit, logo}) => {
+export const SpringForm = ({formArr, baseColor, onSubmit, logo, title}) => {
   let filterArr = filterForType(formArr)
   let initArr = initArrayShape(filterArr)
   const [state, dispatch] = useReducer(reducer, {...initState, formVals: initArr});
@@ -83,8 +83,9 @@ export const SpringForm = ({formArr, baseColor, onSubmit, logo}) => {
           viewState={state.viewscreen}
           containerRef={containerRef} 
           setView={setView} 
-          locDispatch={dispatch}
+          dispatch={dispatch}
           logo={logo}
+          title={title}
         >
           {compArray}
           <SubmitPopover openDialog={state.dialogOpen} handleClose={() => dispatch({type: 'set_dialog', payload: false})} handleSubmit={handleSubmit}/>
@@ -105,11 +106,13 @@ SpringForm.propTypes = {
     'lightGreen', 'lime', 'yellow', 'amber', 'orange', 'deepOrange', 'brown', 'grey', 'blueGrey'
   ]),
   logo: PropTypes.string,
+  title: PropTypes.string,
 }
 
 SpringForm.defaultProps = {
   formArr: [],
   onSubmit: (data) => console.log('submit' , data),
   baseColor: 'red',
-  logo: null
+  logo: null,
+  title: null
 };

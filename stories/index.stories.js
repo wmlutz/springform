@@ -70,6 +70,6 @@ let formArr = [
 ]
 
 storiesOf('SpringForm', module)
-    .add('red', () => <SpringForm formArr={formArr} baseColor='red'/>)
-    .add('green', () => <SpringForm formArr={formArr} baseColor='green'/>)
-    .add('blue', () => <SpringForm formArr={formArr} baseColor='blue'/>)
+    .add('red', () => <SpringForm formArr={formArr} baseColor='red' title='VentureLink Application Form' />)
+    .add('green', () => <SpringForm formArr={formArr} baseColor='green' />)
+    .add('blue', () => <SpringForm formArr={formArr} baseColor='blue' />)
