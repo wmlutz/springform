@@ -24,6 +24,10 @@ const useStyles = makeStyles(theme => ({
   question: {
     fontWeight: 300
   },
+  label: {
+    fontWeight: 300,
+    fontSize: 14,
+  }
 }));
 
 const Input = ({index, handleChange, dispatch, setView, item, active}) => {
@@ -49,6 +53,7 @@ const Input = ({index, handleChange, dispatch, setView, item, active}) => {
       {options.map(x => <FormControlLabel
         key={x.key}
         disabled={!active}
+        classes={{label: classes.label}}
         control={
           <Checkbox
             checked={value.includes(x.key)}
